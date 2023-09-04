@@ -17,6 +17,7 @@ lerna-debug.log*
 # Tests
 /coverage
 /.nyc_output
+test-results/
 
 # IDEs and editors
 /.idea
@@ -33,3 +34,16 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# IDE - WebStorm
+.idea/
+
+# configuración local específico de tu entorno
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# TypeScript
+tsconfig*.json
