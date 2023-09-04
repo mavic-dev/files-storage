@@ -18,17 +18,12 @@ export class FilesService {
   async uploadFiles(file: Express.Multer.File) {
     const { buffer, originalname, mimetype, ...data } = file;
     console.log({ originalname, mimetype, ...data });
-    return await this.s3_upload(
-      buffer,
-      this.appConfig.bucket,
-      originalname,
-      mimetype,
-    );
+    return this.s3_upload(buffer, originalname, mimetype);
   }
 
-  async s3_upload(file, bucket, name, mimetype) {
+  async s3_upload(file, name, mimetype) {
     const command = new PutObjectCommand({
-      Bucket: bucket,
+      Bucket: this.appConfig.bucket,
       Key: String(name),
       Body: file,
       ACL: this.appConfig.acl,
