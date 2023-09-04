@@ -1,8 +1,10 @@
 import {
   Controller,
+  Get,
   Post,
   UploadedFile,
   UseInterceptors,
+  Param,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from '../services/files.service';
@@ -15,5 +17,10 @@ export class FilesController {
   @UseInterceptors(FileInterceptor('file'))
   uploadFiles(@UploadedFile() file: Express.Multer.File) {
     return this.filesService.uploadFiles(file);
+  }
+
+  @Get(':name')
+  getFile(@Param('name') name: string) {
+    return this.filesService.getFile(name);
   }
 }
