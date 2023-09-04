@@ -1,11 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
   GetObjectCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
 import { ConfigType } from '@nestjs/config';
 import { config } from '../../config';
+
 @Injectable()
 export class FilesService {
   constructor(
@@ -51,6 +53,32 @@ export class FilesService {
       return data.Body.transformToByteArray();
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  async getFiles() {
+    const command = new ListObjectsV2Command({
+      Bucket: this.appConfig.bucket,
+      // The default and maximum number of keys returned is 1000. This limits it to
+      // one for demonstration purposes.
+      MaxKeys: 1,
+    });
+
+    try {
+      let isTruncated = true;
+      let contents = '';
+      while (isTruncated) {
+        const { Contents, IsTruncated, NextContinuationToken } =
+          await this.client.send(command);
+        const contentsList = Contents.map((c) => `${c.Key}`).join('\n');
+        contents += contentsList + '\n';
+        isTruncated = IsTruncated;
+        command.input.ContinuationToken = NextContinuationToken;
+      }
+      const data = contents.split('\n');
+      return data.slice(0, data.length - 1);
+    } catch (err) {
+      console.error(err);
     }
   }
 }

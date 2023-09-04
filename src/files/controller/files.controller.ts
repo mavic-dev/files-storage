@@ -23,4 +23,9 @@ export class FilesController {
   getFile(@Param('name') name: string) {
     return this.filesService.getFile(name);
   }
+
+  @Get()
+  getNamesFile() {
+    return this.filesService.getFiles();
+  }
 }
